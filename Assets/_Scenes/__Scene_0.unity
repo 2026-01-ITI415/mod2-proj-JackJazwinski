@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 9
+  serializedVersion: 10
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -42,8 +42,8 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 12
-  m_GIWorkflowMode: 1
+  serializedVersion: 13
+  m_BakeOnSceneLoad: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -66,9 +66,6 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_FinalGather: 0
-    m_FinalGatherFiltering: 1
-    m_FinalGatherRayCount: 256
     m_ReflectionCompression: 2
     m_MixedBakeMode: 2
     m_BakeBackend: 1
@@ -219,15 +216,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   m_Enabled: 1
-  serializedVersion: 10
+  serializedVersion: 12
   m_Type: 1
-  m_Shape: 0
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.802082
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -271,8 +267,12 @@ Light:
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
+  m_ForceVisible: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
+  m_LightUnit: 1
+  m_LuxAtDistance: 1
+  m_EnableSpotReflector: 1
 --- !u!4 &705507995
 Transform:
   m_ObjectHideFlags: 0
@@ -437,6 +437,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 555482454}
     m_Modifications:
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: _type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.projectileColor.b
+      value: 0.5292551
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.projectileColor.g
+      value: 0.9433962
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.projectileColor.r
+      value: 0.30704877
+      objectReference: {fileID: 0}
     - target: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
       propertyPath: m_Name
       value: Weapon
@@ -556,10 +572,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 930863980}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -588,17 +604,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e58b265a06034356b13ba5ddb7c9c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 30
-  rollMult: -45
-  pitchMult: 30
+  speed: 50
+  rollMult: -58
+  pitchMult: 66.8
   projectilePrefab: {fileID: 8884485313326729009, guid: 93cdb1254cc5842aeb5402d7b9f73a99, type: 3}
-  projectileSpeed: 40
+  projectileSpeed: 32
   weapons:
   - {fileID: 1832105430}
   - {fileID: 819633423}
   - {fileID: 2103876059}
   - {fileID: 980067140}
   - {fileID: 781726980}
+  rapidFireMultiplier: 0.5
+  rapidFireDuration: 6
+  speedMultiplier: 1.5
+  speedDuration: 6
   _shieldLevel: 1
 --- !u!114 &930863984
 MonoBehaviour:
@@ -727,6 +747,10 @@ MonoBehaviour:
   spawnEnemies: 1
   prefabEnemies:
   - {fileID: 2081532115668943053, guid: 9c29a07279b374e2aaf7a015da15211e, type: 3}
+  - {fileID: 3319825933102930435, guid: ac8336763c0c047aca9a469c10d3f448, type: 3}
+  - {fileID: 4070209521177695457, guid: 10ae278da906f451594d7989d76b6d15, type: 3}
+  - {fileID: 6217192625371338093, guid: 8b3b585cc9dbb43ff97ab0579e85fd71, type: 3}
+  - {fileID: 9185519998980853174, guid: 486b535a9aae8446f9346d286631b31d, type: 3}
   enemySpawnPerSecond: 0.5
   enemyInsetDefault: 1.5
   gameRestartDelay: 2
@@ -762,7 +786,27 @@ MonoBehaviour:
     damagePerSec: 0
     delayBetweenShots: 0
     velocity: 50
-  powerUpFrequency: 01000000010000000200000006000000
+  - type: 7
+    letter: R
+    powerUpColor: {r: 1, g: 0.061854143, b: 0, a: 1}
+    weaponModelPrefab: {fileID: 0}
+    projectilePrefab: {fileID: 8884485313326729009, guid: 93cdb1254cc5842aeb5402d7b9f73a99, type: 3}
+    projectileColor: {r: 0, g: 0, b: 0, a: 1}
+    damageOnHit: 0
+    damagePerSec: 0
+    delayBetweenShots: 0
+    velocity: 50
+  - type: 8
+    letter: X
+    powerUpColor: {r: 1, g: 0.93442965, b: 0, a: 1}
+    weaponModelPrefab: {fileID: 0}
+    projectilePrefab: {fileID: 8884485313326729009, guid: 93cdb1254cc5842aeb5402d7b9f73a99, type: 3}
+    projectileColor: {r: 0, g: 0, b: 0, a: 1}
+    damageOnHit: 0
+    damagePerSec: 0
+    delayBetweenShots: 0
+    velocity: 50
+  powerUpFrequency: 01000000010000000200000002000000060000000600000007000000070000000800000008000000
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -789,6 +833,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1725476488}
     m_Modifications:
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: _type
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.projectileColor.b
+      value: 0.42626378
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.projectileColor.g
+      value: 0.42626378
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.projectileColor.r
+      value: 0.9716981
+      objectReference: {fileID: 0}
     - target: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
       propertyPath: m_Name
       value: Weapon
@@ -941,6 +1001,11 @@ MeshRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -962,9 +1027,11 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &1583695811
 MeshFilter:
@@ -992,6 +1059,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 133617906}
     m_Modifications:
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: _type
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
       propertyPath: m_Name
       value: Weapon
@@ -1070,6 +1141,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1757513255}
     m_Modifications:
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: _type
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
       propertyPath: m_Name
       value: Weapon
