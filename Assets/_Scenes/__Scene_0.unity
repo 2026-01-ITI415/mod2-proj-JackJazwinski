@@ -127,6 +127,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2046387151}
     m_Modifications:
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.velocity
+      value: 42
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.damageOnHit
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.delayBetweenShots
+      value: 2.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
       propertyPath: m_Name
       value: Weapon
@@ -529,6 +541,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62d638714b9741da967a5c76ca7f8fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &861469917 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+  m_PrefabInstance: {fileID: 2067731749}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &930863980
 GameObject:
   m_ObjectHideFlags: 0
@@ -619,6 +636,7 @@ MonoBehaviour:
   rapidFireDuration: 6
   speedMultiplier: 1.5
   speedDuration: 6
+  laserDuration: 15
   _shieldLevel: 1
 --- !u!114 &930863984
 MonoBehaviour:
@@ -806,7 +824,17 @@ MonoBehaviour:
     damagePerSec: 0
     delayBetweenShots: 0
     velocity: 50
-  powerUpFrequency: 01000000010000000200000002000000060000000600000007000000070000000800000008000000
+  - type: 5
+    letter: L
+    powerUpColor: {r: 1, g: 0, b: 0.7890277, a: 1}
+    weaponModelPrefab: {fileID: 861469917}
+    projectilePrefab: {fileID: 8884485313326729009, guid: 93cdb1254cc5842aeb5402d7b9f73a99, type: 3}
+    projectileColor: {r: 0.8627452, g: 0.07843138, b: 0.2352941, a: 1}
+    damageOnHit: 100
+    damagePerSec: 100
+    delayBetweenShots: 0
+    velocity: 0
+  powerUpFrequency: 01000000010000000200000002000000060000000600000007000000070000000800000005000000
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,6 +1091,14 @@ PrefabInstance:
       propertyPath: _type
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.velocity
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.damageOnHit
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
       propertyPath: m_Name
       value: Weapon
@@ -1145,6 +1181,38 @@ PrefabInstance:
       propertyPath: _type
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.letter
+      value: L
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.velocity
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.damageOnHit
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.damagePerSec
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.powerUpColor.b
+      value: 0.7179371
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.powerUpColor.g
+      value: 0.0990566
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.powerUpColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
+      propertyPath: def.delayBetweenShots
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4585056558559802871, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
       propertyPath: m_Name
       value: Weapon
@@ -1204,7 +1272,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3725077664527818346, guid: 3e8120250109245dab74cd294a9e7d98, type: 3}
   m_PrefabInstance: {fileID: 2067731749}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 861469917}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e62d638714b9741da967a5c76ca7f8fc, type: 3}

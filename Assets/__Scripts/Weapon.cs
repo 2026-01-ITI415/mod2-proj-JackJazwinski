@@ -65,6 +65,11 @@ public class Weapon : MonoBehaviour
 
     private GameObject weaponModel;
     private Transform shotPointTrans;
+    private LineRenderer laserLine;
+    private float laserVisibleUntil = -1f;
+    private const float LASER_VISUAL_PERSIST = 0.06f;
+    private const float LASER_BEAM_LENGTH = 100f;
+    private const float LASER_BEAM_WIDTH = 0.22f;
 
     void Start()
     {
@@ -83,6 +88,28 @@ public class Weapon : MonoBehaviour
         // Find the fireEvent of a Hero Component in the parent hierarchy
         Hero hero = GetComponentInParent<Hero>();                              // e
         if (hero != null) hero.fireEvent += Fire;
+    }
+
+    void Update()
+    {
+        if (laserLine == null) return;
+
+        // Hide the beam shortly after firing stops, so it appears continuous
+        // while the fire button is held.
+        bool shouldShow = (type == eWeaponType.laser) && (Time.time < laserVisibleUntil);
+        if (laserLine.enabled != shouldShow)
+        {
+            laserLine.enabled = shouldShow;
+        }
+
+        if (shouldShow)
+        {
+            Vector3 start = shotPointTrans.position;
+            start.z = 0;
+            Vector3 end = start + (Vector3.up * LASER_BEAM_LENGTH);
+            laserLine.SetPosition(0, start);
+            laserLine.SetPosition(1, end);
+        }
     }
 
     public eWeaponType type
@@ -110,6 +137,11 @@ public class Weapon : MonoBehaviour
         weaponModel = Instantiate<GameObject>(def.weaponModelPrefab, transform);
         weaponModel.transform.localPosition = Vector3.zero;
         weaponModel.transform.localScale = Vector3.one;
+        if (laserLine != null)
+        {
+            Destroy(laserLine.gameObject);
+            laserLine = null;
+        }
 
         nextShotTime = 0; // You can fire immediately after _type is set.    // h
     }
@@ -142,7 +174,77 @@ public class Weapon : MonoBehaviour
                 p.vel = p.transform.rotation * vel;
                 break;
 
+            case eWeaponType.laser:
+                FireLaserBeam();
+                break;
+
         }
+    }
+
+    private void FireLaserBeam()
+    {
+        if (laserLine == null)
+        {
+            GameObject beamGO = new GameObject("_LaserBeam");
+            beamGO.transform.SetParent(PROJECTILE_ANCHOR);
+            laserLine = beamGO.AddComponent<LineRenderer>();
+            laserLine.material = new Material(Shader.Find("Sprites/Default"));
+            laserLine.positionCount = 2;
+            laserLine.useWorldSpace = true;
+            laserLine.widthMultiplier = LASER_BEAM_WIDTH;
+            laserLine.numCapVertices = 4;
+            laserLine.enabled = false;
+        }
+
+        // Keep the beam world-aligned so it always points straight up.
+        Color beamColor = def.projectileColor;
+        beamColor.a = 0.95f;
+        laserLine.startColor = beamColor;
+        laserLine.endColor = beamColor;
+
+        Vector3 start = shotPointTrans.position;
+        start.z = 0;
+        Vector3 end = start + (Vector3.up * LASER_BEAM_LENGTH);
+        laserLine.SetPosition(0, start);
+        laserLine.SetPosition(1, end);
+        laserLine.enabled = true;
+
+        float fireDelayMultiplier = 1f;
+        if (Hero.S != null)
+        {
+            fireDelayMultiplier = Hero.S.FireDelayMultiplier;
+        }
+
+        float currDelay = def.delayBetweenShots * fireDelayMultiplier;
+        laserVisibleUntil = Time.time + Mathf.Max(LASER_VISUAL_PERSIST, currDelay + 0.02f);
+
+        // Laser uses damage-per-second if configured, otherwise falls back.
+        // If delay is zero, use frame delta so DPS still applies.
+        float tickSeconds = currDelay > 0 ? currDelay : Time.deltaTime;
+        float damage = def.damagePerSec > 0 ? def.damagePerSec * tickSeconds : def.damageOnHit;
+        if (damage > 0)
+        {
+            RaycastHit[] hits = Physics.RaycastAll(
+                start,
+                Vector3.up,
+                LASER_BEAM_LENGTH,
+                Physics.DefaultRaycastLayers,
+                QueryTriggerInteraction.Collide
+            );
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Enemy e = hits[i].collider.transform.root.GetComponent<Enemy>();
+                if (e == null) continue;
+
+                e.health -= damage;
+                if (e.health <= 0)
+                {
+                    Main.SHIP_DESTROYED(e);
+                    Destroy(e.gameObject);
+                }
+            }
+        }
+        nextShotTime = Time.time + currDelay;
     }
 
     private ProjectileHero MakeProjectile()

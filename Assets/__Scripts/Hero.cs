@@ -20,6 +20,7 @@ public class Hero : MonoBehaviour
     public float rapidFireDuration = 6f;
     public float speedMultiplier = 1.5f;
     public float speedDuration = 6f;
+    public float laserDuration = 10f;
 
     [Header("Dynamic")]
     [Range(0, 4)]
@@ -30,6 +31,8 @@ public class Hero : MonoBehaviour
     private GameObject lastTriggerGo = null;
     private float rapidFireEndTime = -1f;
     private float speedEndTime = -1f;
+    private float laserEndTime = -1f;
+    private eWeaponType[] preLaserWeaponLoadout;
 
     // Declare a new delegate type WeaponFireDelegate
     public delegate void WeaponFireDelegate();                                // a     // Create a WeaponFireDelegate event named fireEvent.
@@ -80,6 +83,12 @@ public class Hero : MonoBehaviour
         if (Input.GetAxis("Jump") == 1 && fireEvent != null)
         {
             fireEvent();
+        }
+
+        // End laser once its timer has fully expired.
+        if (laserEndTime > 0f && Time.time >= laserEndTime)
+        {
+            EndLaserAndRestorePreviousWeapons();
         }
 
     }
@@ -160,6 +169,48 @@ public class Hero : MonoBehaviour
         }
     }
 
+    private bool IsLaserActive
+    {
+        get
+        {
+            return laserEndTime > Time.time && laserEndTime > 0f;
+        }
+    }
+
+    private bool IsWeaponPowerUpType(eWeaponType wt)
+    {
+        return wt != eWeaponType.none
+            && wt != eWeaponType.shield
+            && wt != eWeaponType.rapid
+            && wt != eWeaponType.speed;
+    }
+
+    private void ActivateLaser()
+    {
+        if (!IsLaserActive)
+        {
+            preLaserWeaponLoadout = new eWeaponType[weapons.Length];
+            for (int i = 0; i < weapons.Length; i++)
+            {
+                preLaserWeaponLoadout[i] = weapons[i].type;
+            }
+        }
+        laserEndTime = Time.time + laserDuration;
+        ClearWeapons();
+        weapons[0].SetType(eWeaponType.laser);
+    }
+
+    private void EndLaserAndRestorePreviousWeapons()
+    {
+        laserEndTime = -1f;
+        ClearWeapons();
+        if (preLaserWeaponLoadout == null) return;
+        for (int i = 0; i < weapons.Length && i < preLaserWeaponLoadout.Length; i++)
+        {
+            weapons[i].SetType(preLaserWeaponLoadout[i]);
+        }
+    }
+
     /// <summary>
     /// Finds the first empty Weapon slot (i.e., type=none) and returns it.
     /// </summary>
@@ -195,6 +246,9 @@ public class Hero : MonoBehaviour
             case eWeaponType.shield:                                              // a 
                 shieldLevel++;
                 break;
+            case eWeaponType.laser:
+                ActivateLaser();
+                break;
             case eWeaponType.rapid:
                 rapidFireEndTime = Time.time + rapidFireDuration;
                 break;
@@ -203,6 +257,12 @@ public class Hero : MonoBehaviour
                 break;
 
             default:                                                             // b
+                if (IsLaserActive && IsWeaponPowerUpType(pUp.type))
+                {
+                    // Picking up a different weapon interrupts laser immediately.
+                    laserEndTime = -1f;
+                    preLaserWeaponLoadout = null;
+                }
                 if (pUp.type == weapons[0].type)
                 { // If it is the same type     // c
                     Weapon weap = GetEmptyWeaponSlot();
