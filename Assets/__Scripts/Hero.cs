@@ -15,6 +15,11 @@ public class Hero : MonoBehaviour
     public GameObject projectilePrefab;
     public float projectileSpeed = 40;
     public Weapon[] weapons;
+    [Header("PowerUp Effects")]
+    public float rapidFireMultiplier = 0.5f;
+    public float rapidFireDuration = 6f;
+    public float speedMultiplier = 1.5f;
+    public float speedDuration = 6f;
 
     [Header("Dynamic")]
     [Range(0, 4)]
@@ -23,6 +28,8 @@ public class Hero : MonoBehaviour
 
     [Tooltip("This field holds a reference to the last triggering GameObject")]
     private GameObject lastTriggerGo = null;
+    private float rapidFireEndTime = -1f;
+    private float speedEndTime = -1f;
 
     // Declare a new delegate type WeaponFireDelegate
     public delegate void WeaponFireDelegate();                                // a     // Create a WeaponFireDelegate event named fireEvent.
@@ -55,8 +62,9 @@ public class Hero : MonoBehaviour
 
         // Change transform.position based on the axes
         Vector3 pos = transform.position;
-        pos.x += hAxis * speed * Time.deltaTime;
-        pos.y += vAxis * speed * Time.deltaTime;
+        float currSpeed = speed * MoveSpeedMultiplier;
+        pos.x += hAxis * currSpeed * Time.deltaTime;
+        pos.y += vAxis * currSpeed * Time.deltaTime;
         transform.position = pos;
 
         // Rotate the ship to make it feel more dynamic                       // e
@@ -134,6 +142,24 @@ public class Hero : MonoBehaviour
         }
     }
 
+    public float FireDelayMultiplier
+    {
+        get
+        {
+            if (Time.time < rapidFireEndTime) return rapidFireMultiplier;
+            return 1f;
+        }
+    }
+
+    private float MoveSpeedMultiplier
+    {
+        get
+        {
+            if (Time.time < speedEndTime) return speedMultiplier;
+            return 1f;
+        }
+    }
+
     /// <summary>
     /// Finds the first empty Weapon slot (i.e., type=none) and returns it.
     /// </summary>
@@ -168,6 +194,12 @@ public class Hero : MonoBehaviour
         {
             case eWeaponType.shield:                                              // a 
                 shieldLevel++;
+                break;
+            case eWeaponType.rapid:
+                rapidFireEndTime = Time.time + rapidFireDuration;
+                break;
+            case eWeaponType.speed:
+                speedEndTime = Time.time + speedDuration;
                 break;
 
             default:                                                             // b

@@ -17,7 +17,9 @@ public enum eWeaponType
     missile,    // [NI] Homing missiles
 
     laser,      // [NI] Damage over time
-    shield      // Raise shieldLevel
+    shield,     // Raise shieldLevel
+    rapid,      // Temporary faster firing
+    speed       // Temporary movement boost
 }
 
 
@@ -154,7 +156,13 @@ public class Weapon : MonoBehaviour
         p.transform.position = pos;
 
         p.type = type;
-        nextShotTime = Time.time + def.delayBetweenShots;                    // p
+        // Hero power-ups can modify weapon fire delay globally.
+        float fireDelayMultiplier = 1f;
+        if (Hero.S != null)
+        {
+            fireDelayMultiplier = Hero.S.FireDelayMultiplier;
+        }
+        nextShotTime = Time.time + (def.delayBetweenShots * fireDelayMultiplier); // p
         return (p);
     }
 }
